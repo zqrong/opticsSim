@@ -172,9 +172,11 @@ function laserOnOff(){
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = window.innerWidth * 0.7;
-        this.canvas.height = window.innerHeight * 0.7;
-        this.context = this.canvas.getContext("2d");
+        // this.canvas.width = window.innerWidth * 0.7;
+        // this.canvas.height = window.innerHeight * 0.7;
+		this.canvas.width = 800;
+		this.canvas.height = 500;
+        this.context =  this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea, 20);
         window.addEventListener('keydown', function (e) {
@@ -654,13 +656,31 @@ function updateGameArea() {
     score = 0.0;
     keyActions();
 
-    myGameArea.canvas.width = window.innerWidth * 0.7;
-    myGameArea.canvas.height = window.innerHeight * 0.7;
+    // myGameArea.canvas.width = window.innerWidth * 0.7;
+    // myGameArea.canvas.height = window.innerHeight * 0.7;
+	myGameArea.canvas.width = 800;
+	myGameArea.canvas.height = 500;
 
     myGameArea.context.beginPath();
-	myGameArea.context.lineWidth = "4";
+	myGameArea.context.lineWidth = "2";
 	myGameArea.context.strokeStyle = "black";
-	myGameArea.context.rect(10, 10, myGameArea.canvas.width * 0.7, myGameArea.canvas.width * 0.7 * (5.0 / 8.0));
+	rectWidth = myGameArea.canvas.width * 0.7;
+	rectHeight = myGameArea.canvas.width * 0.7 * (5.0 / 8.0);
+	myGameArea.context.rect(10, 10, rectWidth, rectHeight);
+	myGameArea.context.stroke();
+
+	var A3Y = rectHeight / 350 * 297;
+	myGameArea.context.beginPath();
+	myGameArea.context.moveTo(10, A3Y + 10);
+	myGameArea.context.lineTo(rectWidth + 10, A3Y + 10);
+	myGameArea.context.strokeStyle = "green";
+	myGameArea.context.stroke();
+
+	var A3X = rectWidth / 560 * 420;
+	myGameArea.context.beginPath();
+	myGameArea.context.moveTo(A3X + 10, 10);
+	myGameArea.context.lineTo(A3X + 10, rectHeight + 10);
+	myGameArea.context.strokeStyle = "green";
 	myGameArea.context.stroke();
 
 	myGameArea.context.beginPath();
@@ -677,11 +697,14 @@ function updateGameArea() {
 	calculatePoints();
 
 	myGameArea.context.beginPath();
-	myGameArea.context.lineWidth = "4";
+	myGameArea.context.lineWidth = "3";
 	myGameArea.context.strokeStyle = "red";
 	myGameArea.context.moveTo(points[0][0], points[0][1]);
 	for (var i = 1; i < points.length; i++){
 		myGameArea.context.lineTo(points[i][0], points[i][1]);
+		if (i == points.length - 1 && points[i][0] == myGameArea.canvas.width * 0.7 + 10){
+			myGameArea.context.lineTo(A3X - 5, points[i][1]);
+		}
 	}
 	myGameArea.context.stroke();
 
@@ -695,4 +718,42 @@ function updateGameArea() {
 }
 
 
+function exportPNG() {
+	var canvas = document.querySelector("canvas");
+    var ctx = canvas.getContext("2d");
+    var dataURL = canvas.toDataURL("image/png");
+    var link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'canvas_image.png';
+    link.click();
+}
 
+function exportA3PNG() {
+    var canvas = document.querySelector("canvas");
+    var ctx = canvas.getContext("2d");
+
+	var x = 10;
+	var y = 10;
+	var rectWidth = myGameArea.canvas.width * 0.7
+	var rectHeight = myGameArea.canvas.width * 0.7 * (5.0 / 8.0);
+	var width = rectWidth * (420.0 / 560.0);
+	var height = rectHeight * (297.0 / 350.0);
+    
+    // 创建一个临时 Canvas 用于裁剪
+    var tempCanvas = document.createElement("canvas");
+    var tempCtx = tempCanvas.getContext("2d");
+    tempCanvas.width = width;
+    tempCanvas.height = height;
+    
+    // 在临时 Canvas 上绘制裁剪区域
+    tempCtx.drawImage(canvas, x, y, width, height, 0, 0, width, height);
+    
+    // 将裁剪后的内容导出为 PNG
+    var dataURL = tempCanvas.toDataURL("image/png");
+    
+    // 创建下载链接并点击下载
+    var link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'clipped_image.png';
+    link.click();
+}
