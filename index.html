@@ -2,8 +2,8 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="stylesheet.css">
-		
-		<script type="text/javascript" src="script.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+		<script src="script.js"></script>
 		<title>Laser Shoot Simulator</title>
 	</head>
 		<body onload="startGame()">
@@ -16,7 +16,10 @@
 		X Position (cm): <input type="text" id="xPos" onfocusout="textOut()" onfocusin="textIn()" onclick="this.select()"><br>
 		Y Position (cm): <input type="text" id="yPos" onfocusout="textOut()" onfocusin="textIn()" onclick="this.select()"><br>
 		Angle (degrees): <input type="text" id="angle" onfocusout="textOut()" onfocusin="textIn()" onclick="this.select()"><br>
-		<input type="button" value="Export to PNG" id="exportPNG" onclick="exportPNG()"><br>
-		<input type="button" value="Export to A3 size PNG" id="exportA3PNG" onclick="exportA3PNG()"><br>
+		<input type="button" value="Export to Full size PNG" id="exportPNG" onclick="exportPNG()"><br>
+		<input type="button" value="Export to Full size PDF" id="exportPDF" onclick="exportPDF()"><br>
+
+		<p style="color: green;">Green line indicates Tabloid size crop area (11*17 inches)</p>
+		<!-- <input type="button" value="Export to A3 size PNG" id="exportA3PNG" onclick="exportA3PNG()"><br> -->
 	</body>
 </html>
