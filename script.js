@@ -174,8 +174,8 @@ var myGameArea = {
     start : function() {
         // this.canvas.width = window.innerWidth * 0.7;
         // this.canvas.height = window.innerHeight * 0.7;
-		this.canvas.width = 800;
-		this.canvas.height = 500;
+		this.canvas.width = 2400;
+		this.canvas.height = 1500;
         this.context =  this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea, 20);
@@ -261,8 +261,8 @@ myGameArea.canvas.onmousedown = function(e){
 		mirrors[selected].length *= 439.0 / 541.0;
 		mirrors[selected].width *= 138.0 / 210.0;
 		if (rotationOnSelected == true){
-			mirrors[selected].angle = Math.atan((e.y - mirrors[selected].y) / (e.x - mirrors[selected].x));
-			if (checkDirection(mirrors[selected].x, mirrors[selected].y, e.x, e.y, mirrors[selected].angle) == false){
+			mirrors[selected].angle = Math.atan(((e.y * 3) - mirrors[selected].y) / ((e.x * 3) - mirrors[selected].x));
+			if (checkDirection(mirrors[selected].x, mirrors[selected].y, (e.x * 3), (e.y * 3), mirrors[selected].angle) == false){
 				mirrors[selected].angle = Math.PI + mirrors[selected].angle;
 			}
 			mirrors[selected].angle = normalizeAngle360(mirrors[selected].angle);
@@ -274,9 +274,9 @@ myGameArea.canvas.onmousedown = function(e){
 	downOnSelected = false;
 
 	var tempSelected = null;
-	var minDist = 10000000000000000000.0;
+	var minDist = 15000000000000000000.0;
 	for (var i = 0; i < mirrors.length; i++){
-		var dist = Math.pow(mirrors[i].x - e.x, 2.0) + Math.pow(mirrors[i].y - e.y, 2.0);
+		var dist = Math.pow(mirrors[i].x - (e.x * 3), 2.0) + Math.pow(mirrors[i].y - (e.y * 3), 2.0);
 		if (dist <= Math.pow(mirrors[i].length * 0.5, 2.0)){
 			if (dist < minDist){
 				tempSelected = i;
@@ -303,8 +303,8 @@ myGameArea.canvas.onmousedown = function(e){
 			mirrors[selected].image.src = "selectedMirror" + String(mirrors[selected].numMirrors) + ".png";
 			mirrors[selected].length *= 541.0 / 439.0;
 			mirrors[selected].width *= 210.0 / 138.0;
-			selectedXDelta = e.x - mirrors[selected].x
-			selectedYDelta = e.y - mirrors[selected].y
+			selectedXDelta = (e.x * 3) - mirrors[selected].x
+			selectedYDelta = (e.y * 3) - mirrors[selected].y
 			downOnSelected = true;
 		}
 	}
@@ -329,12 +329,12 @@ myGameArea.canvas.onmouseup = function(e){
 myGameArea.canvas.onmousemove = function(e){
 	if (selected != null && downOnSelected == true && clicked == true){
 		if (rotationOnSelected == false){
-			mirrors[selected].x = e.x - selectedXDelta;
-			mirrors[selected].y = e.y - selectedYDelta;
+			mirrors[selected].x = (e.x * 3) - selectedXDelta;
+			mirrors[selected].y = (e.y * 3) - selectedYDelta;
 		}
 		else{
-			mirrors[selected].angle = Math.atan((e.y - mirrors[selected].y) / (e.x - mirrors[selected].x));
-			if (checkDirection(mirrors[selected].x, mirrors[selected].y, e.x, e.y, mirrors[selected].angle) == false){
+			mirrors[selected].angle = Math.atan(((e.y * 3) - mirrors[selected].y) / ((e.x * 3) - mirrors[selected].x));
+			if (checkDirection(mirrors[selected].x, mirrors[selected].y, (e.x * 3), (e.y * 3), mirrors[selected].angle) == false){
 				mirrors[selected].angle = Math.PI + mirrors[selected].angle;
 			}
 			mirrors[selected].angle = normalizeAngle360(mirrors[selected].angle);
@@ -400,7 +400,7 @@ function calculatePoints(){
 		var laserAngle = angles[angles.length - 1];
 		var laserSlope = Math.tan(laserAngle);
 
-		var minDistance = 100000000000000000000.0;
+		var minDistance = 150000000000000000000.0;
 		var collidesWith = null;
 		var collisionX = null;
 		var collisionY = null;
@@ -658,8 +658,8 @@ function updateGameArea() {
 
     // myGameArea.canvas.width = window.innerWidth * 0.7;
     // myGameArea.canvas.height = window.innerHeight * 0.7;
-	myGameArea.canvas.width = 800;
-	myGameArea.canvas.height = 500;
+	myGameArea.canvas.width = 2400;
+	myGameArea.canvas.height = 1500;
 
     myGameArea.context.beginPath();
 	myGameArea.context.lineWidth = "2";
@@ -697,7 +697,7 @@ function updateGameArea() {
 	calculatePoints();
 
 	myGameArea.context.beginPath();
-	myGameArea.context.lineWidth = "3";
+	myGameArea.context.lineWidth = "4";
 	myGameArea.context.strokeStyle = "red";
 	myGameArea.context.moveTo(points[0][0], points[0][1]);
 	for (var i = 1; i < points.length; i++){
@@ -719,35 +719,48 @@ function updateGameArea() {
 
 function exportPDF() {
     var canvas = document.querySelector("canvas");
-    var ctx = canvas.getContext("2d");
 
-	var x = 10;
-	var y = 10;
-	var rectWidth = myGameArea.canvas.width * 0.7
-	var rectHeight = myGameArea.canvas.width * 0.7 * (5.0 / 8.0);
-	var width = rectWidth;
-	var height = rectHeight;
-    
-    var tempCanvas = document.createElement("canvas");
-    var tempCtx = tempCanvas.getContext("2d");
-    tempCanvas.width = width;
-    tempCanvas.height = height;
-    
-    tempCtx.drawImage(canvas, x, y, width, height, 0, 0, width, height);
-    
-    var dataURL = tempCanvas.toDataURL("image/png");
+	function simulateCanvasMouseDown(canvas, x, y) {
+		var event = new MouseEvent('mousedown', {
+			bubbles: true,
+			cancelable: true,
+			view: window,
+			clientX: x,
+			clientY: y
+		});
+		canvas.dispatchEvent(event);
+	}
+	simulateCanvasMouseDown(canvas, 2399, 1499);
+	
+	setTimeout(function() {
+		var x = 10;
+		var y = 10;
+		var rectWidth = myGameArea.canvas.width * 0.7
+		var rectHeight = myGameArea.canvas.width * 0.7 * (5.0 / 8.0);
+		var width = rectWidth;
+		var height = rectHeight;
+		
+		var tempCanvas = document.createElement("canvas");
+		var tempCtx = tempCanvas.getContext("2d");
+		tempCanvas.width = width * 3;
+		tempCanvas.height = height * 3;
+		
+		tempCtx.drawImage(canvas, x, y, width, height, 0, 0, width, height);
+		
+		var dataURL = tempCanvas.toDataURL("image/png");
 
-    var pdf = new jspdf.jsPDF(
-		{
-			orientation: 'landscape',
-			unit: 'mm',
-			format: [560, 350],
-		}
-	);
+		var pdf = new jspdf.jsPDF(
+			{
+				orientation: 'landscape',
+				unit: 'mm',
+				format: [560, 350],
+			}
+		);
 
-    pdf.addImage(dataURL, "PNG", 0, 0, width, height);
+		pdf.addImage(dataURL, "PNG", 0, 0, width, height);
 
-    pdf.save("canvas_to_pdf.pdf");
+		pdf.save("canvas_to_pdf.pdf");
+	}, 500);
 }
 
 function exportPNG() {
