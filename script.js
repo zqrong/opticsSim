@@ -694,28 +694,28 @@ function updateGameArea() {
 
 	myGameArea.context.beginPath();
 	myGameArea.context.lineWidth = "1";
-	myGameArea.context.strokeStyle = "grey";
+	myGameArea.context.strokeStyle = "blue";
 	myGameArea.context.moveTo(10, 10 + myGameArea.canvas.width * 0.7 * (5.0 / 8.0) * 1/3);
 	myGameArea.context.lineTo(10 + myGameArea.canvas.width * 0.7, 10 + myGameArea.canvas.width * 0.7 * (5.0 / 8.0) * 1/3);
 	myGameArea.context.stroke();
 
 	myGameArea.context.beginPath();
 	myGameArea.context.lineWidth = "1";
-	myGameArea.context.strokeStyle = "grey";
+	myGameArea.context.strokeStyle = "blue";
 	myGameArea.context.moveTo(10, 10 + myGameArea.canvas.width * 0.7 * (5.0 / 8.0) * 2/3);
 	myGameArea.context.lineTo(10 + myGameArea.canvas.width * 0.7, 10 + myGameArea.canvas.width * 0.7 * (5.0 / 8.0) * 2/3);
 	myGameArea.context.stroke();
 
 	myGameArea.context.beginPath();
 	myGameArea.context.lineWidth = "1";
-	myGameArea.context.strokeStyle = "grey";
+	myGameArea.context.strokeStyle = "blue";
 	myGameArea.context.moveTo(10 + myGameArea.canvas.width * 0.7 * 1/3, 10);
 	myGameArea.context.lineTo(10 + myGameArea.canvas.width * 0.7 * 1/3, 10 + myGameArea.canvas.width * 0.7 * (5.0 / 8.0));
 	myGameArea.context.stroke();
 
 	myGameArea.context.beginPath();
 	myGameArea.context.lineWidth = "1";
-	myGameArea.context.strokeStyle = "grey";
+	myGameArea.context.strokeStyle = "blue";
 	myGameArea.context.moveTo(10 + myGameArea.canvas.width * 0.7 * 2/3, 10);
 	myGameArea.context.lineTo(10 + myGameArea.canvas.width * 0.7 * 2/3, 10 + myGameArea.canvas.width * 0.7 * (5.0 / 8.0));
 	myGameArea.context.stroke();
